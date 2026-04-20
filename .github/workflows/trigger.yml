@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Trigger Private Repo
         run: |
-          curl -X POST https://api.github.com/repos/<QATestingGit>/Robot-Framework/dispatches \
+          curl -X POST https://api.github.com/repos/QATestingGit/Robot-Framework/dispatches \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
           -d '{"event_type":"run-tests"}'
