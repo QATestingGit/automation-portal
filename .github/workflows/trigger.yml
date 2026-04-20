@@ -2,6 +2,29 @@ name: Trigger Automation
 
 on:
   workflow_dispatch:
+    inputs:
+      execution_type:
+        description: "Execution Type"
+        required: true
+        type: choice
+        options:
+          - test
+          - include
+        default: test
+
+      value:
+        description: "Test Name(s) or Tag(s) (comma-separated)"
+        required: true
+        default: "TC_E2E_001"
+
+      screenshot:
+        description: "Enable Screenshot"
+        required: true
+        type: choice
+        options:
+          - "True"
+          - "False"
+        default: "False"
 
 jobs:
   trigger:
@@ -13,4 +36,12 @@ jobs:
           curl -X POST https://api.github.com/repos/QATestingGit/Robot-Framework/dispatches \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
-          -d '{"event_type":"run-tests"}'
+          -H "Content-Type: application/json" \
+          -d '{
+            "event_type": "run-tests",
+            "client_payload": {
+              "execution_type": "${{ github.event.inputs.execution_type }}",
+              "value": "${{ github.event.inputs.value }}",
+              "screenshot": "${{ github.event.inputs.screenshot }}"
+            }
+          }'
